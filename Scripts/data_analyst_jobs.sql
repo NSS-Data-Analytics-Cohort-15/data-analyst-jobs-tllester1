@@ -27,7 +27,7 @@ WHERE location = 'TN'
 
 --Q4 How many postings in Tennessee have a star rating above 4?
 
-SELECT COUNT(star_rating) AS star_rating_over_4
+SELECT *
 FROM data_analyst_jobs
 WHERE location = 'TN'
 	AND star_rating > 4;
@@ -46,6 +46,7 @@ WHERE review_count BETWEEN 500 AND 1000;
 
 SELECT location AS state, ROUND(AVG(star_rating),2) AS avg_star_rating
 FROM data_analyst_jobs
+WHERE star_rating IS NOT NULL
 GROUP BY location
 ORDER BY AVG(star_rating) DESC;
 
@@ -70,15 +71,17 @@ WHERE location = 'CA';
 SELECT company, ROUND(AVG(star_rating),2) AS avg_star_rating
 FROM data_analyst_jobs
 WHERE review_count > 5000
-GROUP BY company
+	AND company IS NOT NULL
+GROUP BY company;
 
---Answer: 41
+--Answer: 40
 
 --Q10 Add the code to order the query in #9 from highest to lowest average star rating. Which company with more than 5000 reviews across all locations in the dataset has the highest star rating? What is that rating?
 
 SELECT company, ROUND(AVG(star_rating),2) AS avg_star_rating
 FROM data_analyst_jobs
 WHERE review_count > 5000
+	AND company IS NOT NULL
 GROUP BY company
 ORDER BY avg_star_rating DESC;
 
@@ -88,23 +91,24 @@ ORDER BY avg_star_rating DESC;
 
 SELECT DISTINCT title
 FROM data_analyst_jobs
-WHERE title LIKE '%Analyst%';
+WHERE title ILIKE '%Analyst%';
 
---Answer: 754
+--Answer: 774
 
 --Q12 How many different job titles do not contain either the word ‘Analyst’ or the word ‘Analytics’? What word do these positions have in common?
 
 SELECT DISTINCT title
 FROM data_analyst_jobs
-WHERE title NOT LIKE '%Analyst%'
-AND title NOT LIKE '%Analytics%';
+WHERE title NOT ILIKE '%Analyst%'
+AND title NOT ILIKE '%Analytics%'
 
---Answer: 26. The position either has analyst and analytics in all lowercase or all caps. Otherwise it says 'Specialist' or 'Developer'.
+
+--Answer: 26.  Tableau
 
 --BONUS
 SELECT domain, COUNT(*) AS old_postings
 FROM data_analyst_jobs
-WHERE skill LIKE '%SQL%'
+WHERE skill ILIKE '%SQL%'
 AND days_since_posting > 21
 AND domain IS NOT NULL
 GROUP BY domain
